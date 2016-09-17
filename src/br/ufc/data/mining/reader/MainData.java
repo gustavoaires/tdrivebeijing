@@ -51,7 +51,6 @@ public class MainData {
 			}
 		});
 		t5.start();
-		System.out.println("Iniciou as threads");
 		Thread t6 = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -59,7 +58,6 @@ public class MainData {
 			}
 		});
 		t6.start();
-		System.out.println("Iniciou as threads");
 		Thread t7 = new Thread(new Runnable() {
 			@Override
 			public void run() {

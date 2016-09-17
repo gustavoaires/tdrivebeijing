@@ -56,7 +56,7 @@ public class MainData {
 			@Override
 			public void run() {
 				fileReader6.readFile("tdrive6");	
-			}
+			} 
 		});
 		t6.start();
 		System.out.println("Iniciou as threads");

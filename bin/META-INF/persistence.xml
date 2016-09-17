@@ -8,7 +8,7 @@
 		<class>br.ufc.model.*</class>
 
 
-		<properties>
+		<properties> 
 			<!-- propriedades do hibernate -->
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 			<property name="javax.persistence.jdbc.url"

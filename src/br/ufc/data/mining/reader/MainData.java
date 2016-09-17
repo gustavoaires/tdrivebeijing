@@ -10,6 +10,11 @@ public class MainData {
 		FileReader fileReader3 = new FileReader();
 		FileReader fileReader4 = new FileReader();
 		FileReader fileReader5 = new FileReader();
+		FileReader fileReader6 = new FileReader();
+		FileReader fileReader7 = new FileReader();
+		FileReader fileReader8 = new FileReader();
+		FileReader fileReader9 = new FileReader();
+		FileReader fileReader10 = new FileReader();		
 		
 		Thread t1 = new Thread(new Runnable() {
 			@Override
@@ -46,6 +51,43 @@ public class MainData {
 			}
 		});
 		t5.start();
+		System.out.println("Iniciou as threads");
+		Thread t6 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				fileReader6.readFile("tdrive6");	
+			}
+		});
+		t6.start();
+		System.out.println("Iniciou as threads");
+		Thread t7 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				fileReader7.readFile("tdrive7");	
+			}
+		});
+		t7.start();
+		Thread t8 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				fileReader8.readFile("tdrive8");	
+			}
+		});
+		t8.start();
+		Thread t9 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				fileReader9.readFile("tdrive9");	
+			}
+		});
+		t9.start();
+		Thread t10 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				fileReader10.readFile("tdrive10");	
+			}
+		});
+		t10.start();
 		System.out.println("Iniciou as threads");
 	}
 

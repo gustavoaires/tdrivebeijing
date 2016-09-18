@@ -18,6 +18,7 @@ public class FileReader {
 
 		try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
 			stream.forEach(s -> processLine(s));
+			System.out.println("Iniciou " + arquivo);
 			dao.close();
 			System.out.println("Finalizou " + arquivo);
 		}  catch (IOException e1) {

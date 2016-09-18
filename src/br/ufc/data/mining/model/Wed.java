@@ -1,16 +1,13 @@
 package br.ufc.data.mining.model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Entity(name = "drive")
-public class Drive {
+@Entity(name = "quarta")
+public class Wed implements Day {
 
 	@Id
 	@GeneratedValue
@@ -32,8 +29,8 @@ public class Drive {
 		return date;
 	}
 
-	public void setDate(String sdate) throws ParseException {
-		this.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sdate);
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public Double getLongitude() {

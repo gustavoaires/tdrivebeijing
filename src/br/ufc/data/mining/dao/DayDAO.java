@@ -6,33 +6,32 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import br.ufc.data.mining.model.Day;
-
-public class DayDAO {
+public abstract class DayDAO<T> {
 	private EntityManager manager;
 	private EntityManagerFactory factory;
 	
 	public DayDAO() {
 		factory = Persistence.createEntityManagerFactory("drive");
 		manager = factory.createEntityManager();
+		begin();
 	}
-	
-	public void insert(Day day) {
+
+	public void begin() {
 		manager.getTransaction().begin();
-		manager.persist(day);
-		manager.getTransaction().commit();
 	}
 	
 	public void close() {
 		manager.close();
 	}
 	
-	public List<Day> getAllByDayAndHour(String day, String begin, String end) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<T> getAllByDayAndHour(String day, String begin, String end, Class c) {
 		String[] dateBeginEnd = createDate(day, begin, end);
-		manager.getTransaction().begin();
-		return manager.createQuery("select x from " + day + " as x "
+		System.out.println(day);
+		List<T> result = manager.createQuery("select x from " + day + " as x "
 				+ "where date between '"+ dateBeginEnd[0] +"' and '" + dateBeginEnd[1] + "'",
-				Day.class).getResultList();
+				c).getResultList();
+		return result;
 	}
 	
 	public String[] createDate(String table, String begin, String end) {

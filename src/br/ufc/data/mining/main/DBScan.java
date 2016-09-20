@@ -1,10 +1,10 @@
 package br.ufc.data.mining.main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import br.ufc.data.mining.dao.DayDAO;
 import br.ufc.data.mining.model.Cluster;
@@ -27,11 +27,14 @@ public class DBScan {
 		DayDAO dao = new DayDAO();
 		String[] days = { "segunda", "terca", "quarta", "quinta", "sexta" };
 		Class[] classes = { MonDrive.class, TueDrive.class, WedDrive.class, ThuDrive.class, FriDrive.class };
-		
+		// Dataset completo
 		List<DayDrive> dataSet = new ArrayList<>();
+		// Clusters separados por dias
+		HashMap<String, List<Cluster>> dayClusters = new HashMap<String, List<Cluster>>();
+		
 		for (int i = 0; i < 5; i++) {
 			dataSet = dao.getAllByDayAndHour(days[0], "13:00:00", "14:00:00", classes[0]);
-			dbscan(dataSet, 1.2, 8);
+			dayClusters.put(days[0], dbscan(dataSet, 1.2, 8));
 		}
 		dao.close();
 	}
@@ -45,6 +48,7 @@ public class DBScan {
 	 */
 	private static List<Cluster> dbscan(List<DayDrive> dataSet, Double eps, int minPoints) {
 		List<Cluster> regions = new ArrayList<Cluster>();
+		
 		for (DayDrive point : dataSet) {
 			if (!point.isVisited()) {
 				point.setVisited(true);
@@ -60,13 +64,14 @@ public class DBScan {
 				}
 			}
 		}
+		
 		return regions;
 	}
 
 	/**
 	 * 
 	 * @param point candidato a core
-	 * @param neighbors estão dentro do eps
+	 * @param neighbors estao dentro do eps
 	 * @param cluster novo cluster a ser criado
 	 * @param eps raio de distancia maxima
 	 * @param minPoints quantidade minima de pontos no cluster
@@ -77,31 +82,39 @@ public class DBScan {
 	private static Set<DayDrive> expandCluster(DayDrive point, Set<DayDrive> neighbors, Set<DayDrive> cluster, 
 			Double eps,	int minPoints, List<DayDrive> dataSet, int clusterId) {
 		cluster.add(point);
-		Set<DayDrive> temp = new HashSet<DayDrive>();
-		for (DayDrive p : neighbors) {
-			if (!p.isVisited()) {
-				p.setVisited(true);
-				Set<DayDrive> pNeighbors = regionQuery(p, eps, dataSet);
-				if (pNeighbors.size() >= minPoints)
-					//necessidade de alterar concorrentemente
-					temp.addAll(pNeighbors);
+		Set<DayDrive> pNeighbors= new HashSet<DayDrive>();
+		boolean goahead;
+		
+		do {
+			goahead = false;
+			for (DayDrive p : neighbors) {
+				if (!p.isVisited()) {
+					p.setVisited(true);
+					pNeighbors = regionQuery(p, eps, dataSet);
+					if (pNeighbors.size() >= minPoints)
+						goahead = true;
+					else pNeighbors.clear();
+				}
+				if (p.getCluster() == -1) {
+					cluster.add(p);
+					p.setCluster(clusterId);
+				}
 			}
-			if (p.getCluster() == -1) {
-				cluster.add(p);
-				p.setCluster(clusterId);
-			}
-		}
-		neighbors.addAll(temp);
+			neighbors.addAll(pNeighbors);
+		} while (goahead);
+		
 		return cluster;
 	}
 
 	private static Set<DayDrive> regionQuery(DayDrive point, Double eps, List<DayDrive> dataSet) {
 		Set<DayDrive> neighbors = new HashSet<DayDrive>();
 		neighbors.add(point);
+		
 		for (DayDrive other : dataSet) {
 			if (euclideanDistance(point, other) <= eps)
 				neighbors.add(other);
 		}
+		
 		return neighbors;
 	}
 	

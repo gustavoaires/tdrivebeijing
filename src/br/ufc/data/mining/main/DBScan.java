@@ -7,6 +7,7 @@ import java.util.Set;
 
 import br.ufc.data.mining.dao.DayDAO;
 import br.ufc.data.mining.dao.FriDAO;
+import br.ufc.data.mining.model.Cluster;
 import br.ufc.data.mining.model.DayDrive;
 import br.ufc.data.mining.model.FriDrive;
 import br.ufc.data.mining.model.MonDrive;
@@ -51,8 +52,8 @@ public class DBScan {
 					point.setIsCore(false);
 				else {
 					Set<DayDrive> c = new HashSet<DayDrive>();
-					Cluster c = new Cluster();
-					c.addAll(expandCluster(point, neighbors, c, eps, minPoints, dataSet));
+					Cluster cluster = new Cluster();
+					cluster.points.addAll(expandCluster(point, neighbors, c, eps, minPoints, dataSet));
 				}
 			}
 		}

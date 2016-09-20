@@ -1,17 +1,17 @@
 package br.ufc.data.mining.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Cluster {
 
 	private static int ID = 0;
 	private int itsId;
-	public List<DayDrive> points;
+	public Set<DayDrive> points;
 	
 	public Cluster() {
 		itsId = ID++;
-		points = new ArrayList<>();
+		points = new HashSet<DayDrive>();
 	}
 
 	public int getItsId() {

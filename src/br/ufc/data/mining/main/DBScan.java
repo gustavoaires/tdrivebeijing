@@ -50,8 +50,9 @@ public class DBScan {
 				if (neighbors.size() < minPoints)
 					point.setIsCore(false);
 				else {
-					Set<DayDrive> cluster = new HashSet<DayDrive>();
-					expandCluster(point, neighbors, cluster, eps, minPoints, dataSet);
+					Set<DayDrive> c = new HashSet<DayDrive>();
+					Cluster c = new Cluster();
+					c.addAll(expandCluster(point, neighbors, c, eps, minPoints, dataSet));
 				}
 			}
 		}
@@ -60,7 +61,7 @@ public class DBScan {
 	/*
 	 * Falta decidir o que vai retornar
 	 */
-	private static void expandCluster(DayDrive point, Set<DayDrive> neighbors, Set<DayDrive> cluster, Double eps,
+	private static Set<DayDrive> expandCluster(DayDrive point, Set<DayDrive> neighbors, Set<DayDrive> cluster, Double eps,
 			int minPoints, List<DayDrive> dataSet) {
 		cluster.add(point);
 		for (DayDrive p : neighbors) {
@@ -73,6 +74,7 @@ public class DBScan {
 			if (p.getCluster() == -1)
 				cluster.add(p);
 		}
+		return cluster;
 	}
 
 	private static Set<DayDrive> regionQuery(DayDrive point, Double eps, List<DayDrive> dataSet) {

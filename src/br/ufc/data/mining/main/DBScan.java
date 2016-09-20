@@ -83,17 +83,14 @@ public class DBScan {
 			Double eps,	int minPoints, List<DayDrive> dataSet, int clusterId) {
 		cluster.add(point);
 		Set<DayDrive> pNeighbors= new HashSet<DayDrive>();
-		boolean goahead;
-		
+		// Precisa rever essa parte do algoritmo
+		// É necessario adicionar mais elementos no conjunto enquanto percorre
 		do {
-			goahead = false;
 			for (DayDrive p : neighbors) {
 				if (!p.isVisited()) {
 					p.setVisited(true);
 					pNeighbors = regionQuery(p, eps, dataSet);
-					if (pNeighbors.size() >= minPoints)
-						goahead = true;
-					else pNeighbors.clear();
+					if (pNeighbors.size() >= minPoints);
 				}
 				if (p.getCluster() == -1) {
 					cluster.add(p);
@@ -101,7 +98,7 @@ public class DBScan {
 				}
 			}
 			neighbors.addAll(pNeighbors);
-		} while (goahead);
+		} while (false);
 		
 		return cluster;
 	}

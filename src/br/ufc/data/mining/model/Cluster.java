@@ -17,8 +17,4 @@ public class Cluster {
 	public int getItsId() {
 		return itsId;
 	}
-
-	public void setItsId(int itsId) {
-		this.itsId = itsId;
-	}
 }

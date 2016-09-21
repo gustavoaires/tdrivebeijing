@@ -6,7 +6,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-public abstract class DayDAO<T> {
+import br.ufc.data.mining.model.DayDrive;
+
+public class DayDAO {
 	private EntityManager manager;
 	private EntityManagerFactory factory;
 	
@@ -25,16 +27,17 @@ public abstract class DayDAO<T> {
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<T> getAllByDayAndHour(String day, String begin, String end, Class c) {
+	public List<DayDrive> getAllByDayAndHour(String day, String begin, String end, Class c) {
 		String[] dateBeginEnd = createDate(day, begin, end);
 		System.out.println(day);
-		List<T> result = manager.createQuery("select x from " + day + " as x "
+		List<DayDrive> result = (List<DayDrive>)(List<?>) 
+				manager.createQuery("select x from " + day + " as x "
 				+ "where date between '"+ dateBeginEnd[0] +"' and '" + dateBeginEnd[1] + "'",
 				c).getResultList();
 		return result;
 	}
 	
-	public String[] createDate(String table, String begin, String end) {
+	private String[] createDate(String table, String begin, String end) {
 		String[] dateBeginEnd = new String[2];
 		switch (table) {
 			case "segunda":

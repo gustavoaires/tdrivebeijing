@@ -19,7 +19,7 @@ public class DBScan {
 	/*
 	 * Falta modificar o retorno do metodo dbscan para guardar os resultados do
 	 * processamento Esses resultados serao as regioes As regioes podem ser um
-	 * list de sets
+	 * list de sets 
 	 */
 	private static List<Cluster>clustersList;
 	@SuppressWarnings({ "unchecked", "rawtypes" })

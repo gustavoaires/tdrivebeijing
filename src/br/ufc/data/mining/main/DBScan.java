@@ -39,7 +39,7 @@ public class DBScan {
 
 	/**
 	 * 
-	 * @param dataSet
+	 * @param dataSet 
 	 * @param eps
 	 * @param minPoints
 	 * @return List of Clusters

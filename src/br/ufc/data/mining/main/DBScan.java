@@ -19,9 +19,8 @@ public class DBScan {
 	/*
 	 * Falta modificar o retorno do metodo dbscan para guardar os resultados do
 	 * processamento Esses resultados serao as regioes As regioes podem ser um
-	 * list de sets 
+	 * list de sets
 	 */
-	private static List<Cluster>clustersList;
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
 		DayDAO dao = new DayDAO();
@@ -30,22 +29,11 @@ public class DBScan {
 		List<DayDrive> dataSet = new ArrayList<>();
 		for (int i = 0; i < 5; i++) {
 			dataSet = (List<DayDrive>) (List<?>) dao.getAllByDayAndHour(days[i], "13:00:00", "14:00:00", classes[i]);
-			
-		clustersList =	dbscan(dataSet, 0.03, 5);
+
+				dbscan(dataSet, 0.03, 5);
 		}
-		
+
 		dao.close();
-		for(Cluster cluster : clustersList){
-			
-			System.out.println("Entrei no for do clusterList");
-			for(DayDrive dd : cluster.points){
-				System.out.println(dd.getId());
-				System.out.println(dd.getIdStudent());
-				System.out.println(dd.getLatitude());
-				System.out.println(dd.getLongitude());
-			}
-			
-		}
 
 	}
 
@@ -56,7 +44,7 @@ public class DBScan {
 	 * @param minPoints
 	 * @return List of Clusters
 	 */
-	private static List<Cluster> dbscan(List<DayDrive> dataSet, Double eps, int minPoints) {
+	private static void dbscan(List<DayDrive> dataSet, Double eps, int minPoints) {
 		List<Cluster> clusters = new ArrayList<>();
 		for (DayDrive point : dataSet) {
 			if (!point.isVisited()) {
@@ -68,11 +56,10 @@ public class DBScan {
 					Set<DayDrive> c = new HashSet<DayDrive>();
 					Cluster cluster = new Cluster();
 					cluster.points.addAll(expandCluster(point, neighbors, c, eps, minPoints, dataSet));
-					clusters.add(cluster);
+					
 				}
 			}
 		}
-		return clusters;
 	}
 
 	/*
@@ -80,7 +67,7 @@ public class DBScan {
 	 */
 	private static Set<DayDrive> expandCluster(DayDrive point, Set<DayDrive> neighbors, Set<DayDrive> cluster,
 			Double eps, int minPoints, List<DayDrive> dataSet) {
-		
+
 		cluster.add(point);
 
 		for (DayDrive p : neighbors) {
@@ -88,10 +75,10 @@ public class DBScan {
 				p.setVisited(true);
 				Set<DayDrive> pNeighbors = regionQuery(p, eps, dataSet);
 
-				if (pNeighbors.size() >= minPoints){
+				if (pNeighbors.size() >= minPoints) {
 					neighbors.addAll(pNeighbors);
 				}
-					
+
 			}
 
 			if (p.getCluster() == -1)
@@ -106,7 +93,7 @@ public class DBScan {
 		for (DayDrive other : dataSet) {
 			if (euclideanDistance(point, other) <= eps)
 				neighbors.add(other);
-				other.setVisited(true);
+			other.setVisited(true);
 		}
 		return neighbors;
 	}

@@ -21,6 +21,7 @@ public class DBScan {
 	 * processamento Esses resultados serao as regioes As regioes podem ser um
 	 * list de sets
 	 */
+	private static List<Cluster>clustersList;
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
 		DayDAO dao = new DayDAO();
@@ -29,9 +30,22 @@ public class DBScan {
 		List<DayDrive> dataSet = new ArrayList<>();
 		for (int i = 0; i < 5; i++) {
 			dataSet = (List<DayDrive>) (List<?>) dao.getAllByDayAndHour(days[i], "13:00:00", "14:00:00", classes[i]);
-			dbscan(dataSet, 1.2, 8);
+			
+		clustersList =	dbscan(dataSet, 0.03, 5);
 		}
+		
 		dao.close();
+		for(Cluster cluster : clustersList){
+			
+			System.out.println("Entrei no for do clusterList");
+			for(DayDrive dd : cluster.points){
+				System.out.println(dd.getId());
+				System.out.println(dd.getIdStudent());
+				System.out.println(dd.getLatitude());
+				System.out.println(dd.getLongitude());
+			}
+			
+		}
 
 	}
 
@@ -42,7 +56,8 @@ public class DBScan {
 	 * @param minPoints
 	 * @return List of Clusters
 	 */
-	private static void dbscan(List<DayDrive> dataSet, Double eps, int minPoints) {
+	private static List<Cluster> dbscan(List<DayDrive> dataSet, Double eps, int minPoints) {
+		List<Cluster> clusters = new ArrayList<>();
 		for (DayDrive point : dataSet) {
 			if (!point.isVisited()) {
 				point.setVisited(true);
@@ -53,9 +68,11 @@ public class DBScan {
 					Set<DayDrive> c = new HashSet<DayDrive>();
 					Cluster cluster = new Cluster();
 					cluster.points.addAll(expandCluster(point, neighbors, c, eps, minPoints, dataSet));
+					clusters.add(cluster);
 				}
 			}
 		}
+		return clusters;
 	}
 
 	/*

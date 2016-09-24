@@ -7,9 +7,9 @@ import javax.persistence.Transient;
 public abstract class DayDrive {
 	
 	@Transient
-	protected boolean iscore;
+	protected boolean iscore = false;
 	@Transient
-	protected int cluster = -1;
+	protected int cluster = 0;
 	@Transient
 	protected final int idStudent = 363854;
 	@Transient

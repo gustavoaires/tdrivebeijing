@@ -5,9 +5,9 @@ import java.util.Set;
 
 public class Cluster {
 
-	private static int ID = 0;
+	private static int ID = 1;
 	private int itsId;
-	public Set<DayDrive> points;
+	private Set<DayDrive> points;
 	
 	public Cluster() {
 		itsId = ID++;
@@ -16,5 +16,14 @@ public class Cluster {
 
 	public int getItsId() {
 		return itsId;
+	}
+	
+	public void add(DayDrive point) {
+		point.setCluster(this.itsId);
+		points.add(point);
+	}
+	
+	public Set<DayDrive> getPoints() {
+		return points;
 	}
 }

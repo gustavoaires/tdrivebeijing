@@ -33,8 +33,8 @@ public class DBScan {
 		HashMap<String, List<Cluster>> dayClusters = new HashMap<String, List<Cluster>>();
 
 //		for (int i = 0; i < 5; i++) {
-		dataSet = dao.getAllByDayAndHour(days[4], "13:00:00", "14:00:00", classes[4]);
-		dayClusters.put(days[4], dbscan(dataSet, 1.2, 8));
+		dataSet = dao.getAllByDayAndHour(days[4], "13:00:00", "13:20:00", classes[4]);
+		dayClusters.put(days[4], dbscan(dataSet, 0.250, 3500));
 		
 		List<Cluster> c = dayClusters.get(days[4]);
 		
@@ -45,6 +45,8 @@ public class DBScan {
 						dd.isCore() + ";");
 			}
 		}
+		for (Cluster cl : c)
+			System.out.println("ID=" + cl.getItsId() + ";TAM=" + cl.getPoints().size());
 		System.out.println(c.size());
 //		}
 		dao.close();
@@ -63,12 +65,13 @@ public class DBScan {
 			if (!point.isVisited()) {
 				point.setVisited(true);
 				Set<DayDrive> neighbors = regionQuery(point, eps, dataSet);
-				if (neighbors.size() < minPoints)
+				if (!hasMinPoints(neighbors, minPoints))
 					point.setCluster(-1);
 				else {
 					Cluster cluster = new Cluster();
-					expandCluster(point, neighbors, cluster, eps, minPoints, dataSet, cluster.getItsId());
+					expandCluster(point, neighbors, cluster, eps, minPoints, dataSet);
 					regions.add(cluster);
+					point.setIsCore(true);
 				}
 			}
 		}
@@ -87,7 +90,7 @@ public class DBScan {
 	 * @return novo cluster preenchido
 	 */
 	private static Cluster expandCluster(DayDrive point, Set<DayDrive> neighbors, Cluster cluster, Double eps,
-			int minPoints, List<DayDrive> dataSet, int clusterId) {
+			int minPoints, List<DayDrive> dataSet) {
 		cluster.add(point);
 		point.setIsCore(true);
 		Set<DayDrive> pNeighbors = new HashSet<DayDrive>();
@@ -98,16 +101,18 @@ public class DBScan {
 				if (!p.isVisited()) {
 					p.setVisited(true);
 					pNeighbors = regionQuery(p, eps, dataSet);
-					if (pNeighbors.size() >= minPoints) {
-						p.setIsCore(true);
+					if (hasMinPoints(pNeighbors, minPoints)) {
 						tempNeighbors.addAll(pNeighbors);
+						p.setIsCore(true);
 					}
 				}
 				if (p.getCluster() == 0)
 					cluster.add(p);
 			}
 			neighbors.clear();
-			neighbors.addAll(tempNeighbors);
+			for (DayDrive d: tempNeighbors)
+				if (!cluster.getPoints().contains(d))
+					neighbors.add(d);
 			tempNeighbors.clear();
 		}
 
@@ -129,5 +134,16 @@ public class DBScan {
 	private static Double euclideanDistance(DayDrive p1, DayDrive p2) {
 		return Math.sqrt(Math.pow((p1.getLongitude() - p2.getLongitude()), 2)
 				+ Math.pow(p1.getLatitude() - p2.getLatitude(), 2));
+	}
+	
+	private static boolean hasMinPoints(Set<DayDrive> neighbors, int minPoints) {
+		Set<Long> ids = new HashSet<>();
+		for (DayDrive n : neighbors) {
+			if (!ids.contains(n.getId())) {
+				ids.add(n.getId());
+			}
+		}
+		System.out.println(ids.size());
+		return ids.size() >= minPoints;
 	}
 }

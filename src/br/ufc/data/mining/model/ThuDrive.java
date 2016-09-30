@@ -12,12 +12,12 @@ public class ThuDrive extends DayDrive {
 	@Id
 	@GeneratedValue
 	private Long dbId;
-	protected Long id;
+	protected long id;
 	protected Date date;
 	protected Double longitude;
 	protected Double latitude;
 	
-	public Long getId() {
+	public long getId() {
 		return this.id;
 	}
 	public void setId(Long id) {

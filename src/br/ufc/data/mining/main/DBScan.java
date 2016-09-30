@@ -138,11 +138,9 @@ public class DBScan {
 	
 	private static boolean hasMinPoints(Set<DayDrive> neighbors, int minPoints) {
 		Set<Long> ids = new HashSet<>();
-		for (DayDrive n : neighbors) {
-			if (!ids.contains(n.getId())) {
+		for (DayDrive n : neighbors)
+			if (!ids.contains(n.getId())) 
 				ids.add(n.getId());
-			}
-		}
 		System.out.println(ids.size());
 		return ids.size() >= minPoints;
 	}

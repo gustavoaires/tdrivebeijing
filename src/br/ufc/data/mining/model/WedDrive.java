@@ -4,21 +4,20 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity(name = "quarta")
 public class WedDrive extends DayDrive {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue
 	private Long dbId;
-	protected Long id;
+	protected long id;
 	protected Date date;
 	protected Double longitude;
 	protected Double latitude;
 	
-	public Long getId() {
+	public long getId() {
 		return this.id;
 	}
 	public void setId(Long id) {
@@ -41,27 +40,6 @@ public class WedDrive extends DayDrive {
 	}
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
-	}
-	public boolean isCore() {
-		return this.iscore;
-	}
-	public void setIsCore(boolean iscore) {
-		this.iscore = iscore;
-	}
-	public int getCluster() {
-		return this.cluster;
-	}
-	public void setCluster(int cluster) {
-		this.cluster = cluster;
-	}
-	public int getIdStudent() {
-		return this.idStudent;
-	}
-	public boolean isVisited() {
-		return this.visited;
-	}
-	public void setVisited(boolean value) {
-		this.visited = value;
 	}
 	@Override
 	public boolean equals(Object obj) {

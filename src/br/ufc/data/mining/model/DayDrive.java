@@ -15,7 +15,7 @@ public abstract class DayDrive {
 	@Transient
 	protected boolean visited = false;
 	
-	public abstract Long getId();
+	public abstract long getId();
 	public abstract void setId(Long id);
 	public abstract Date getDate();
 	public abstract void setDate(Date date);
@@ -23,11 +23,25 @@ public abstract class DayDrive {
 	public abstract Double getLongitude();
 	public abstract void setLatitude(Double latitude);
 	public abstract void setLongitude(Double longitude);
-	public abstract boolean isCore();
-	public abstract void setIsCore(boolean iscore);
-	public abstract int getCluster();
-	public abstract void setCluster(int cluster);
-	public abstract int getIdStudent();
-	public abstract boolean isVisited();
-	public abstract void setVisited(boolean value);
+	public boolean isCore() {
+		return this.iscore;
+	}
+	public void setIsCore(boolean iscore) {
+		this.iscore = iscore;
+	}
+	public int getCluster() {
+		return this.cluster;
+	}
+	public void setCluster(int cluster) {
+		this.cluster = cluster;
+	}
+	public int getIdStudent() {
+		return this.idStudent;
+	}
+	public boolean isVisited() {
+		return this.visited;
+	}
+	public void setVisited(boolean value) {
+		this.visited = value;
+	}
 }

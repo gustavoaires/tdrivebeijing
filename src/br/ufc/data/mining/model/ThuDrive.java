@@ -4,21 +4,20 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity(name = "quinta")
 public class ThuDrive extends DayDrive {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue
 	private Long dbId;
-	protected Long id;
+	protected long id;
 	protected Date date;
 	protected Double longitude;
 	protected Double latitude;
 	
-	public Long getId() {
+	public long getId() {
 		return this.id;
 	}
 	public void setId(Long id) {

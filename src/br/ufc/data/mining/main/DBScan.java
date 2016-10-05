@@ -27,30 +27,21 @@ public class DBScan {
 		// Dataset completo
 		List<DayDrive> dataSet = new ArrayList<>();
 		// Clusters separados por dias
-		HashMap<String, HashMap<Integer,Cluster> > dayClusters = new HashMap<String, HashMap<Integer,Cluster>>();
-
-		// for (int i = 0; i < 5; i++) {
-		dataSet = dao.getAllByDayAndHour(days[3], "13:00:00", "14:00:00", classes[3]);
-		dayClusters.put(days[3], dbscan(dataSet, 0.005, 60));
-
-		HashMap<Integer, Cluster> c = dayClusters.get(days[3]);
-
-		// for (Cluster cl : c) {
-		// for (DayDrive dd : cl.getPoints()) {
-		// System.out.println(dd.getCluster() + ";" + dd.getId() + ";" +
-		// dd.getLongitude() + ";" + dd.getLatitude() + ";" +
-		// dd.isCore() + ";");
-		// }
-		// }
+		HashMap<String, HashMap<Integer, Cluster>> dayClusters = new HashMap<String, HashMap<Integer, Cluster>>();
+		HashMap<Integer, Cluster> c = new HashMap<Integer, Cluster>();
 		Cluster cl = null;
-		
-		for (int i = 1; i< c.size(); i++){
-			cl = c.get(i);
-			System.out.println("ID=" + cl.getItsId() + ";TAM=" + cl.getPoints().size());
+		for (int i = 0; i < 5; i++) {
+			dataSet = dao.getAllByDayAndHour(days[i], "13:00:00", "14:00:00", classes[i]);
+			dayClusters.put(days[i], dbscan(dataSet, 0.005, 60));
+			c = dayClusters.get(days[i]);
+
+			for (int j = 1;  j<= c.size(); j++) {
+				cl = c.get(j);
+				System.out.println("ID=" + cl.getItsId() + ";TAM=" + cl.getPoints().size());
+			}
 		}
-			
+
 		System.out.println(c.size());
-		// }
 		dao.close();
 		System.out.println(outliers.size());
 	}
@@ -62,8 +53,7 @@ public class DBScan {
 	 * @return List of Clusters
 	 */
 
-	private static boolean checkNeighborhood(DayDrive d, Set<DayDrive> neighbors,
-			HashMap<Integer, Cluster> clusters) {
+	private static boolean checkNeighborhood(DayDrive d, Set<DayDrive> neighbors, HashMap<Integer, Cluster> clusters) {
 
 		for (DayDrive pt : neighbors) {
 
@@ -78,7 +68,7 @@ public class DBScan {
 		return false;
 	}
 
-	private static HashMap<Integer,Cluster> dbscan(List<DayDrive> dataSet, Double eps, int minPoints) {
+	private static HashMap<Integer, Cluster> dbscan(List<DayDrive> dataSet, Double eps, int minPoints) {
 		HashMap<Integer, Cluster> regions = new HashMap<Integer, Cluster>();
 		Set<DayDrive> neighbors = null;
 		System.out.println("Tamanho dataset " + dataSet.size());
@@ -91,10 +81,6 @@ public class DBScan {
 				if (checkNeighborhood(point, neighbors, regions)) {
 					continue;
 				}
-
-				// Assim que pegarmos o cara, caso ele tenha um vizinho
-				// ja visitado, iremos adicioná-lo ao cluster do primeiro
-				// vizinho logo
 				if (!hasMinPoints(neighbors, minPoints)) {
 					point.setCluster(-1);
 					outliers.put(point.getId(), point);
@@ -102,8 +88,8 @@ public class DBScan {
 
 					Cluster cluster = new Cluster();
 					expandCluster(point, neighbors, cluster, eps, minPoints, dataSet);
-					
-					regions.put(cluster.getItsId(),cluster);
+
+					regions.put(cluster.getItsId(), cluster);
 					point.setIsCore(true);
 				}
 			}

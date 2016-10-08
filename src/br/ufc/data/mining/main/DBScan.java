@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import br.ufc.data.mining.dao.DayDAO;
+import br.ufc.data.mining.dao.ResultDAO;
 import br.ufc.data.mining.model.Cluster;
 import br.ufc.data.mining.model.DayDrive;
 import br.ufc.data.mining.model.FriDrive;
@@ -17,7 +18,7 @@ import br.ufc.data.mining.model.WedDrive;
 
 public class DBScan {
 
-	private static HashMap<Long, DayDrive> outliers = new HashMap<>();
+	private static Set<DayDrive> outliers = new HashSet<DayDrive>();
 
 	@SuppressWarnings({ "rawtypes" })
 	public static void main(String[] args) {
@@ -30,20 +31,24 @@ public class DBScan {
 		HashMap<String, HashMap<Integer, Cluster>> dayClusters = new HashMap<String, HashMap<Integer, Cluster>>();
 		HashMap<Integer, Cluster> c = new HashMap<Integer, Cluster>();
 		Cluster cl = null;
-		for (int i = 0; i < 5; i++) {
-			dataSet = dao.getAllByDayAndHour(days[i], "13:00:00", "14:00:00", classes[i]);
-			dayClusters.put(days[i], dbscan(dataSet, 0.005, 60));
-			c = dayClusters.get(days[i]);
-
-			for (int j = 1;  j<= c.size(); j++) {
-				cl = c.get(j);
-				System.out.println("ID=" + cl.getItsId() + ";TAM=" + cl.getPoints().size());
-			}
+		// for (int i = 0; i < 5; i++) {
+		outliers.clear();
+		dataSet = dao.getAllByDayAndHour(days[0], "13:00:00", "13:20:00", classes[0]);
+		dayClusters.put(days[0], dbscan(dataSet, 0.005, 60));
+		// }
+		ResultDAO.delete();
+		// for (int j = 0; j < 5; j++) {
+		c = dayClusters.get(days[0]);
+		for (int i = 1; i < c.size(); i++) {
+			cl = c.get(i);
+			System.out.println("ID=" + cl.getItsId() + ";TAM=" + cl.getPoints().size());
+			ResultDAO.insert(cl.getPoints());
 		}
+//	}
+	ResultDAO.insert(outliers);
 
-		System.out.println(c.size());
-		dao.close();
-		System.out.println(outliers.size());
+	System.out.println(c.size());dao.close();System.out.println(outliers.size());
+
 	}
 
 	/**
@@ -57,7 +62,7 @@ public class DBScan {
 
 		for (DayDrive pt : neighbors) {
 
-			if (pt.getCluster() > 0) {
+			if (pt.getCluster() > 0 && pt.isCore()) {
 				int id = pt.getCluster();
 				Cluster c = clusters.get(id);
 				d.setCluster(pt.getCluster());
@@ -78,12 +83,12 @@ public class DBScan {
 				point.setVisited(true);
 				neighbors = regionQuery(point, eps, dataSet);
 
-				if (checkNeighborhood(point, neighbors, regions)) {
+				if (checkNeighborhood(point, neighbors, regions))
 					continue;
-				}
+
 				if (!hasMinPoints(neighbors, minPoints)) {
 					point.setCluster(-1);
-					outliers.put(point.getId(), point);
+					outliers.add(point);
 				} else {
 
 					Cluster cluster = new Cluster();

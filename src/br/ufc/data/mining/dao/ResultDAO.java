@@ -22,6 +22,7 @@ public class ResultDAO {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void insert(Set<DayDrive> points) {
 		java.sql.PreparedStatement stmt;
 		String query = "INSERT INTO result (taxiid, coordenada, weekday, idstudent, idcluster, iscore) "
@@ -35,7 +36,7 @@ public class ResultDAO {
 				stmt.setLong(1, d.getId());
 				stmt.setDouble(2, d.getLongitude());
 				stmt.setDouble(3, d.getLatitude());
-				stmt.setInt(4, d.getWeekDay());
+				stmt.setInt(4, d.getDate().getDay());
 				stmt.setInt(5, d.getIdStudent());
 				stmt.setLong(6, d.getCluster());
 				stmt.setBoolean(7, d.isCore());

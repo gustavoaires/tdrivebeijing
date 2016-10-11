@@ -16,7 +16,20 @@ public class ThuDrive extends DayDrive {
 	protected Date date;
 	protected Double longitude;
 	protected Double latitude;
-	
+	protected Double longitudeVertex;
+	protected Double latitudeVertex;
+	public void setLongitudeVertex(Double longitude) {
+		this.longitudeVertex = longitude;
+	}
+	public Double getLongitudeVertex() {
+		return this.longitudeVertex;
+	}
+	public void setLatitudeVertex(Double latitude) {
+		this.latitudeVertex = latitude;
+	}
+	public Double getLatitudeVertex() {
+		return this.latitudeVertex;
+	}
 	public Long getId() {
 		return this.id;
 	}
@@ -26,21 +39,8 @@ public class ThuDrive extends DayDrive {
 	public Date getDate() {
 		return this.date;
 	}
-	@SuppressWarnings("deprecation")
 	public void setDate(Date date) {
 		this.date = date;
-		int day = 0;
-		if (date.getDate() == 4)
-			day = 1;
-		else if (date.getDate() == 5)
-			day = 2;
-		else if (date.getDate() == 6)
-			day = 3;
-		else if (date.getDate() == 7)
-			day = 4;
-		else if (date.getDate() == 8)
-			day = 5;
-		super.setWeekday(day);
 	}
 	public Double getLatitude() {
 		return this.latitude;

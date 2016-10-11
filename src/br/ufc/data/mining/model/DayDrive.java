@@ -14,8 +14,6 @@ public abstract class DayDrive {
 	protected final int idStudent = 363854;
 	@Transient
 	protected boolean visited = false;
-	@Transient
-	protected int weekday = 0;
 
 	public abstract Long getId();
 
@@ -32,16 +30,15 @@ public abstract class DayDrive {
 	public abstract void setLatitude(Double latitude);
 
 	public abstract void setLongitude(Double longitude);
-
-	public int getWeekDay() {
-
-		return this.weekday;
-	}
-
-	public void setWeekday(int weekDay) {
-		this.weekday = weekDay;
-	}
-
+	
+	public abstract void setLongitudeVertex(Double longitude);
+	
+	public abstract Double getLongitudeVertex();
+	
+	public abstract void setLatitudeVertex(Double latitude);
+	
+	public abstract Double getLatitudeVertex();
+	
 	public boolean isCore() {
 		return this.iscore;
 	}

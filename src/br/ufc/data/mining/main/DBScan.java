@@ -1,6 +1,5 @@
 package br.ufc.data.mining.main;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +7,7 @@ import java.util.Set;
 
 import br.ufc.data.mining.dao.DayDAO;
 import br.ufc.data.mining.dao.ResultDAO;
+import br.ufc.data.mining.dao.VertexDAO;
 import br.ufc.data.mining.model.Cluster;
 import br.ufc.data.mining.model.DayDrive;
 import br.ufc.data.mining.model.FriDrive;
@@ -24,17 +24,21 @@ public class DBScan {
 	@SuppressWarnings({ "rawtypes" })
 	public static void main(String[] args) {
 		DayDAO dao = new DayDAO();
+		VertexDAO vDao = new VertexDAO();
 		final String[] days = { "segunda", "terca", "quarta", "quinta", "sexta" };
 		final Class[] classes = { MonDrive.class, TueDrive.class, WedDrive.class, ThuDrive.class, FriDrive.class };
 		// Dataset completo
-		List<DayDrive> dataSet = new ArrayList<>();
+		List<DayDrive> dataSet = null;
+//		List<Vertex> vertices = null;
 		// Clusters separados por dias
 		HashMap<String, HashMap<Integer, Cluster>> dayClusters = new HashMap<String, HashMap<Integer, Cluster>>();
 		HashMap<Integer, Cluster> c = new HashMap<Integer, Cluster>();
 		Cluster cl = null;
 		// for (int i = 0; i < 5; i++) {
 		outliers.clear();
+//		vertices = vDao.getAllVertex();
 		dataSet = dao.getAllByDayAndHour(days[0], "13:00:00", "14:00:00", classes[0]);
+//		mapMatching(dataSet, vertices);
 		dayClusters.put(days[0], dbscan(dataSet, 0.003, 40));
 		// }
 		ResultDAO.delete();
@@ -184,7 +188,7 @@ public class DBScan {
 		return ids.size() >= minPoints;
 	}
 	
-	private static void mapMatching(Set<DayDrive> points, Set<Vertex> vertices) {
+	private static void mapMatching(List<DayDrive> points, List<Vertex> vertices) {
 		Double menor, atual;
 		Vertex candidate = null;
 		for (DayDrive p: points) {

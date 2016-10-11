@@ -3,7 +3,7 @@ package br.ufc.data.mining.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity(name = "vertices")
+@Entity(name = "vertex")
 public class Vertex {
 
 	@Id

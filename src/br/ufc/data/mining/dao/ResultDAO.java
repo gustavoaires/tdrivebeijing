@@ -23,9 +23,9 @@ public class ResultDAO {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static void insert(Set<DayDrive> points) {
+	public static void insert(Set<DayDrive> points, String table) {
 		java.sql.PreparedStatement stmt;
-		String query = "INSERT INTO result (taxiid, coordenada, weekday, idstudent, idcluster, iscore) "
+		String query = "INSERT INTO " + table + " (taxiid, coordenada, weekday, idstudent, idcluster, iscore) "
 				+ "values (?,ST_SetSrid(ST_MakePoint(?,?),4326),?,?,?,?)";
 		
 		try {

@@ -29,7 +29,7 @@ public class VertexRoadDAO {
 	}
 	
 	public List<Road> getAllRoad() {
-		return manager.createQuery("select v from vertex as v", Road.class).getResultList();
+		return manager.createQuery("select r from road as r", Road.class).getResultList();
 	}
 	
 	public List<Vertex> getAllVertex() {

@@ -56,18 +56,17 @@ public class DBScanDijkstra {
 		// for (int j = 0; j < 5; j++) {
 		c = dayClusters.get(days[4]);
 		// System.out.println(c.size());
-		for (int i = 1; i <= c.size(); i++) {
-			cl = c.get(i);
-			System.out.println("i: " + i);
+		for (Map.Entry<Integer, Cluster> cl1 : c.entrySet()) {
+			cl = cl1.getValue();
 			System.out.println(cl.getItsId());
 			System.out.println("ID=" + cl.getItsId() + ";TAM=" + cl.getPoints().size());
-			ResultDAO.insert(cl.getPoints());
+			ResultDAO.insert(cl.getPoints(), "result_net_dist");
 		}
 		// }
-		// ResultDAO.insert(outliers);
+		ResultDAO.insert(outliers, "result_net_dist");
 		//
 		// dao.close();
-		// System.out.println(outliers.size());
+		System.out.println(outliers.size());
 
 	}
 
@@ -94,7 +93,9 @@ public class DBScanDijkstra {
 					outliers.add(point);
 				} else {
 					Cluster cluster = new Cluster();
+					System.out.println("expandCluster");
 					expandCluster(point, neighbors, cluster, eps, minPoints, dataSet, algorithm);
+					
 					if (cluster.getPoints().size() >= minPoints) {
 						regions.put(cluster.getItsId(), cluster);
 						point.setIsCore(true);
@@ -185,7 +186,7 @@ public class DBScanDijkstra {
 		Vertex candidate = null;
 		for (DayDrive p : points) {
 			menor = Double.MAX_VALUE;
-			atual = 0.;
+			atual = Double.MAX_VALUE;
 			for (Vertex v : vertices) {
 				atual = euclideanDistance(p, v);
 				if (atual < menor) {
@@ -200,9 +201,9 @@ public class DBScanDijkstra {
 	private static void addRoadsVertexes(List<Road> edges, List<Vertex> nodes) {
 		for (Road edge : edges) {
 			for (Vertex node : nodes) {
-				if (edge.getOrigem() == node.getId())
+				if (edge.getOrigem().longValue() == node.getId().longValue())
 					edge.setSource(node);
-				if (edge.getDestino() == node.getId())
+				if (edge.getDestino().longValue() == node.getId().longValue())
 					edge.setDestination(node);
 			}
 		}

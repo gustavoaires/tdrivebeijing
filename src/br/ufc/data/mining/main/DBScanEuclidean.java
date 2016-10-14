@@ -23,40 +23,38 @@ public class DBScanEuclidean {
 	@SuppressWarnings({ "rawtypes" })
 	public static void main(String[] args) {
 		DayDAO dao = new DayDAO();
-		
+
 		final String[] days = { "segunda", "terca", "quarta", "quinta", "sexta" };
 		final Class[] classes = { MonDrive.class, TueDrive.class, WedDrive.class, ThuDrive.class, FriDrive.class };
 		// Dataset completo
-		List<DayDrive> dataSet = dao.getAllByDayAndHour(days[4], "13:00:00", "13:20:00", classes[4]);
+		List<DayDrive> dataSet = dao.getAllByDayAndHour(days[3], "13:00:00", "14:00:00", classes[3]);
 
 		// Clusters separados por dias
 		Map<String, HashMap<Integer, Cluster>> dayClusters = new HashMap<String, HashMap<Integer, Cluster>>();
 		// HashMap<String, HashMap<Integer, Cluster>>();
 		Map<Integer, Cluster> c = new HashMap<Integer, Cluster>();
 		Cluster cl = null;
-		// // for (int i = 0; i < 5; i++) {
+		// for (int i = 0; i < 5; i++) {
 		// outliers.clear();
 		// vertices = vDao.getAllVertex();
 
-		dayClusters.put(days[4], dbscan(dataSet, 1., 40));
+		dayClusters.put(days[3], dbscan(dataSet, 0.004, 10));
 		// }
 		ResultDAO.delete();
 		// for (int j = 0; j < 5; j++) {
-		c = dayClusters.get(days[4]);
+		c = dayClusters.get(days[3]);
 		// System.out.println(c.size());
-		for (int i = 1; i <= c.size(); i++) {
-			cl = c.get(i);
-			System.out.println("i: " + i);
+		for (Map.Entry<Integer, Cluster> cl1 : c.entrySet()) {
+			cl = cl1.getValue();
 			System.out.println(cl.getItsId());
 			System.out.println("ID=" + cl.getItsId() + ";TAM=" + cl.getPoints().size());
-			ResultDAO.insert(cl.getPoints());
+			ResultDAO.insert(cl.getPoints(), "result_thu");
 		}
 		// }
-		// ResultDAO.insert(outliers);
+		System.out.println(outliers.size());
+		ResultDAO.insert(outliers, "result_thu");
 		//
 		// dao.close();
-		// System.out.println(outliers.size());
-
 	}
 
 	private static HashMap<Integer, Cluster> dbscan(List<DayDrive> dataSet, Double eps, int minPoints) {
@@ -146,7 +144,7 @@ public class DBScanEuclidean {
 				ids.add(n.getId());
 		return ids.size() >= minPoints;
 	}
-	
+
 	private static boolean checkNeighborhood(DayDrive d, Set<DayDrive> neighbors, HashMap<Integer, Cluster> clusters) {
 		for (DayDrive pt : neighbors) {
 			if (pt.getCluster() > 0 && pt.isCore()) {

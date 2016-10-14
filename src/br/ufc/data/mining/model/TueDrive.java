@@ -16,20 +16,6 @@ public class TueDrive extends DayDrive {
 	protected Date date;
 	protected Double longitude;
 	protected Double latitude;
-	protected Double longitudeVertex;
-	protected Double latitudeVertex;
-	public void setLongitudeVertex(Double longitude) {
-		this.longitudeVertex = longitude;
-	}
-	public Double getLongitudeVertex() {
-		return this.longitudeVertex;
-	}
-	public void setLatitudeVertex(Double latitude) {
-		this.latitudeVertex = latitude;
-	}
-	public Double getLatitudeVertex() {
-		return this.latitudeVertex;
-	}
 	public Long getId() {
 		return this.id;
 	}

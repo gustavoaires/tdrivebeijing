@@ -6,14 +6,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import br.ufc.data.mining.model.Road;
 import br.ufc.data.mining.model.Vertex;
 
-public class VertexDAO {
+public class VertexRoadDAO {
 
 	private EntityManager manager;
 	private EntityManagerFactory factory;
 	
-	public VertexDAO() {
+	public VertexRoadDAO() {
 		factory = Persistence.createEntityManagerFactory("drive");
 		manager = factory.createEntityManager();
 		begin();
@@ -25,6 +26,10 @@ public class VertexDAO {
 	
 	public void close() {
 		manager.close();
+	}
+	
+	public List<Road> getAllRoad() {
+		return manager.createQuery("select v from vertex as v", Road.class).getResultList();
 	}
 	
 	public List<Vertex> getAllVertex() {

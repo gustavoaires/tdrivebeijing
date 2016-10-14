@@ -14,6 +14,8 @@ public abstract class DayDrive {
 	protected final int idStudent = 363854;
 	@Transient
 	protected boolean visited = false;
+	@Transient
+	protected Vertex node;
 
 	public abstract Long getId();
 
@@ -30,14 +32,6 @@ public abstract class DayDrive {
 	public abstract void setLatitude(Double latitude);
 
 	public abstract void setLongitude(Double longitude);
-	
-	public abstract void setLongitudeVertex(Double longitude);
-	
-	public abstract Double getLongitudeVertex();
-	
-	public abstract void setLatitudeVertex(Double latitude);
-	
-	public abstract Double getLatitudeVertex();
 	
 	public boolean isCore() {
 		return this.iscore;
@@ -65,5 +59,13 @@ public abstract class DayDrive {
 
 	public void setVisited(boolean value) {
 		this.visited = value;
+	}
+	
+	public void setVertex(Vertex vertex) {
+		this.node = vertex;
+	}
+	
+	public Vertex getVertex() {
+		return this.node;
 	}
 }

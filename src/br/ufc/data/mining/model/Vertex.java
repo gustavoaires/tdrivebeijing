@@ -28,4 +28,16 @@ public class Vertex {
 	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null) {
+			if (obj instanceof Vertex) {
+				Vertex other = (Vertex) obj;
+				if (this.id == other.id) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

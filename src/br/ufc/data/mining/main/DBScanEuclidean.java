@@ -95,6 +95,7 @@ public class DBScanEuclidean {
 			for (DayDrive p : neighbors) {
 				if (!p.isVisited()) {
 					p.setVisited(true);
+					visited.add(p);
 					pNeighbors = regionQuery(p, eps, dataSet);
 					if (hasMinPoints(pNeighbors, minPoints)) {
 						tempNeighbors.addAll(pNeighbors);
@@ -104,10 +105,10 @@ public class DBScanEuclidean {
 				if (p.getCluster() == 0)
 					cluster.add(p);
 			}
-			neighbors.clear();
-			for (DayDrive d : tempNeighbors)
-				if (!cluster.getPoints().contains(d))
-					neighbors.add(d);
+			neighbors.addAll(tempNeighbors);
+			for (DayDrive d : visited)
+				if (neighbors.contains(d))
+					neighbors.remove(d);
 			tempNeighbors.clear();
 		}
 

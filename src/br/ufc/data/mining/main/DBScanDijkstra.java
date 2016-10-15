@@ -107,6 +107,7 @@ public class DBScanDijkstra {
 		Set<DayDrive> pNeighbors = new HashSet<DayDrive>();
 		Set<DayDrive> tempNeighbors = new HashSet<DayDrive>();
 		Map<Vertex, Double> allDistances = null;
+		Set<DayDrive> visited = new HashSet<DayDrive>();
 
 		while (!neighbors.isEmpty()) {
 			for (DayDrive p : neighbors) {
@@ -122,10 +123,10 @@ public class DBScanDijkstra {
 				if (p.getCluster() == 0)
 					cluster.add(p);
 			}
-			neighbors.clear();
-			for (DayDrive d : tempNeighbors)
-				if (!cluster.getPoints().contains(d))
-					neighbors.add(d);
+			neighbors.addAll(tempNeighbors);
+			for (DayDrive d : visited)
+				if (neighbors.contains(d))
+					neighbors.remove(d);
 			tempNeighbors.clear();
 		}
 

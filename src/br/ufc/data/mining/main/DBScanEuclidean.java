@@ -27,7 +27,7 @@ public class DBScanEuclidean {
 		final String[] days = { "segunda", "terca", "quarta", "quinta", "sexta" };
 		final Class[] classes = { MonDrive.class, TueDrive.class, WedDrive.class, ThuDrive.class, FriDrive.class };
 		// Dataset completo
-		List<DayDrive> dataSet = dao.getAllByDayAndHour(days[3], "13:00:00", "14:00:00", classes[3]);
+		List<DayDrive> dataSet = dao.getAllByDayAndHour(days[4], "13:00:00", "14:00:00", classes[4]);
 
 		// Clusters separados por dias
 		Map<String, HashMap<Integer, Cluster>> dayClusters = new HashMap<String, HashMap<Integer, Cluster>>();
@@ -38,21 +38,21 @@ public class DBScanEuclidean {
 		// outliers.clear();
 		// vertices = vDao.getAllVertex();
 
-		dayClusters.put(days[3], dbscan(dataSet, 0.004, 10));
+		dayClusters.put(days[4], dbscan(dataSet, 0.004, 10));
 		// }
 		ResultDAO.delete();
 		// for (int j = 0; j < 5; j++) {
-		c = dayClusters.get(days[3]);
+		c = dayClusters.get(days[4]);
 		// System.out.println(c.size());
 		for (Map.Entry<Integer, Cluster> cl1 : c.entrySet()) {
 			cl = cl1.getValue();
 			System.out.println(cl.getItsId());
 			System.out.println("ID=" + cl.getItsId() + ";TAM=" + cl.getPoints().size());
-			ResultDAO.insert(cl.getPoints(), "result_thu");
+			ResultDAO.insert(cl.getPoints(), "result_fri");
 		}
 		// }
 		System.out.println(outliers.size());
-		ResultDAO.insert(outliers, "result_thu");
+		ResultDAO.insert(outliers, "result_fri");
 		//
 		// dao.close();
 	}
@@ -67,24 +67,14 @@ public class DBScanEuclidean {
 				point.setVisited(true);
 				neighbors = regionQuery(point, eps, dataSet);
 
-				if (checkNeighborhood(point, neighbors, regions))
-					continue;
-
 				if (!hasMinPoints(neighbors, minPoints)) {
 					point.setCluster(-1);
 					outliers.add(point);
 				} else {
 					Cluster cluster = new Cluster();
 					expandCluster(point, neighbors, cluster, eps, minPoints, dataSet);
-					if (cluster.getPoints().size() >= minPoints) {
-						regions.put(cluster.getItsId(), cluster);
-						point.setIsCore(true);
-					} else {
-						for (DayDrive p : cluster.getPoints()) {
-							p.setCluster(-1);
-							outliers.add(p);
-						}
-					}
+					regions.put(cluster.getItsId(), cluster);
+					point.setIsCore(true);
 				}
 			}
 			neighbors.clear();
@@ -98,8 +88,10 @@ public class DBScanEuclidean {
 		point.setIsCore(true);
 		Set<DayDrive> pNeighbors = new HashSet<DayDrive>();
 		Set<DayDrive> tempNeighbors = new HashSet<DayDrive>();
+		Set<DayDrive> visited = new HashSet<DayDrive>();
 
 		while (!neighbors.isEmpty()) {
+			visited.addAll(neighbors);
 			for (DayDrive p : neighbors) {
 				if (!p.isVisited()) {
 					p.setVisited(true);
@@ -143,18 +135,5 @@ public class DBScanEuclidean {
 			if (!ids.contains(n.getId()))
 				ids.add(n.getId());
 		return ids.size() >= minPoints;
-	}
-
-	private static boolean checkNeighborhood(DayDrive d, Set<DayDrive> neighbors, HashMap<Integer, Cluster> clusters) {
-		for (DayDrive pt : neighbors) {
-			if (pt.getCluster() > 0 && pt.isCore()) {
-				int id = pt.getCluster();
-				Cluster c = clusters.get(id);
-				d.setCluster(pt.getCluster());
-				c.add(d);
-				return true;
-			}
-		}
-		return false;
 	}
 }

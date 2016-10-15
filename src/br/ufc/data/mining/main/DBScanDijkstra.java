@@ -50,7 +50,7 @@ public class DBScanDijkstra {
 		// outliers.clear();
 		// vertices = vDao.getAllVertex();
 
-		dayClusters.put(days[4], dbscan(dataSet, 1., 40, algorithm));
+		dayClusters.put(days[4], dbscan(dataSet, 0.004, 10, algorithm));
 		// }
 		ResultDAO.delete();
 		// for (int j = 0; j < 5; j++) {
@@ -85,26 +85,14 @@ public class DBScanDijkstra {
 
 				neighbors = regionQuery(allDistances, dataSet, eps);
 
-				if (checkNeighborhood(point, neighbors, regions))
-					continue;
-
 				if (!hasMinPoints(neighbors, minPoints)) {
 					point.setCluster(-1);
 					outliers.add(point);
 				} else {
 					Cluster cluster = new Cluster();
-					System.out.println("expandCluster");
 					expandCluster(point, neighbors, cluster, eps, minPoints, dataSet, algorithm);
-					
-					if (cluster.getPoints().size() >= minPoints) {
-						regions.put(cluster.getItsId(), cluster);
-						point.setIsCore(true);
-					} else {
-						for (DayDrive p : cluster.getPoints()) {
-							p.setCluster(-1);
-							outliers.add(p);
-						}
-					}
+					regions.put(cluster.getItsId(), cluster);
+					point.setIsCore(true);
 				}
 			}
 			neighbors.clear();
@@ -153,19 +141,6 @@ public class DBScanDijkstra {
 			}
 		}
 		return neighbors;
-	}
-
-	private static boolean checkNeighborhood(DayDrive d, Set<DayDrive> neighbors, HashMap<Integer, Cluster> clusters) {
-		for (DayDrive pt : neighbors) {
-			if (pt.getCluster() > 0 && pt.isCore()) {
-				int id = pt.getCluster();
-				Cluster c = clusters.get(id);
-				d.setCluster(pt.getCluster());
-				c.add(d);
-				return true;
-			}
-		}
-		return false;
 	}
 
 	private static boolean hasMinPoints(Set<DayDrive> neighbors, int minPoints) {

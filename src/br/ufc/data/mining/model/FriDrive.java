@@ -16,7 +16,6 @@ public class FriDrive extends DayDrive {
 	protected Date date;
 	protected Double longitude;
 	protected Double latitude;
-	protected Double longitudeVertex;
 	public Long getId() {
 		return this.id;
 	}

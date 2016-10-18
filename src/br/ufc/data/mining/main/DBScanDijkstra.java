@@ -113,6 +113,7 @@ public class DBScanDijkstra {
 			for (DayDrive p : neighbors) {
 				if (!p.isVisited()) {
 					p.setVisited(true);
+					visited.add(p);
 					allDistances = algorithm.getDistances();
 					pNeighbors = regionQuery(allDistances, dataSet, eps);
 					if (hasMinPoints(pNeighbors, minPoints)) {

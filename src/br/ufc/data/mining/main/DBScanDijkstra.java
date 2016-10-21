@@ -22,6 +22,7 @@ import br.ufc.data.mining.model.WedDrive;
 public class DBScanDijkstra {
 
 	private static Set<DayDrive> outliers = new HashSet<DayDrive>();
+	private static long qtd = 1;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -75,9 +76,10 @@ public class DBScanDijkstra {
 		HashMap<Integer, Cluster> regions = new HashMap<Integer, Cluster>();
 		Map<Vertex, Double> allDistances = null;
 		Set<DayDrive> neighbors = null;
-
+		
 		for (DayDrive point : dataSet) {
 			if (!point.isVisited()) {
+				System.out.println(qtd++);
 				algorithm.execute(point.getVertex());
 
 				point.setVisited(true);
@@ -112,6 +114,7 @@ public class DBScanDijkstra {
 		while (!neighbors.isEmpty()) {
 			for (DayDrive p : neighbors) {
 				if (!p.isVisited()) {
+					System.out.println(qtd++);
 					p.setVisited(true);
 					visited.add(p);
 					allDistances = algorithm.getDistances();
